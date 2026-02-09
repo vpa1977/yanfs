@@ -231,9 +231,11 @@ public class NfsURLConnection extends URLConnection {
 		        String imageFileName = MimeEntry_defaultImagePath + "/file.gif";
 
 		        // Find the file image to use using the file's .suffix
-		        entry = mt.findByFileName(dirList[i]);
-		        if (entry != null) {
-			    String realImageName = entry.getImageFileName();
+		        String mimeType = mt.getContentTypeFor(dirList[i]);
+
+		        if (mimeType != null) {
+			    String realImageName = MimeEntry_defaultImagePath +
+			        "/" + mimeType.replace('/', '-') + ".gif";
 			    if (realImageName != null) {
 			        imageFileName = realImageName;
 			    }
@@ -267,9 +269,9 @@ public class NfsURLConnection extends URLConnection {
         } else {
             // Mark the input stream we return as containing a certain file type
             // by looking up the file name in the mimetable 
-            entry = mt.findByFileName(path);
-            if (entry != null) {
-                props.add("content-type", entry.getType());
+            String contentType = mt.getContentTypeFor(path);
+            if (contentType != null) {
+                props.add("content-type", contentType);
             } 
             setProperties(props);
             
